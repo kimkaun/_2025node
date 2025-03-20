@@ -4,9 +4,8 @@ const express = require('express');
 // express 애플리케이션을 생성합니다.
 const app = express();
 
-// 루트 경로('/')에 대한 요청을 처리합니다.
-app.get('/', (req, res) => {
-  res.send('Hello, World!\n');
+app.post('/swag', (req, res) => {
+  res.send('post swag');
 });
 
 // 서버가 포트 3000에서 요청을 대기합니다.
