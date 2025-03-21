@@ -6,11 +6,15 @@ const app = express();
 
 app.use(express.json());
 
-app.post('/swag', (req, res) => {
+app.get('/swag', (req, res) => {
   res.send(req.body);
 });
 
-app.get('/swag', (req, res) => {
+app.get('/swag/:person', (req, res) => {
+  res.send(req.params.person);
+});
+
+app.post('/swag', (req, res) => {
   res.send(req.body);
 });
 
