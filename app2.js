@@ -14,6 +14,9 @@ const db = mysql.createConnection({
   database : process.env.DB_NAME
 });
 
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+
 app.set('view engine', 'ejs');
 // __dirname : 현재 파일이 속한 절대경로
 // path.join을 사용하면 운영체제에 맞추어 경로 구분자(/, \)를 알아서 정해준다.
@@ -32,8 +35,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/travel', (req, res) => {
-  const query = 'select id, name from travelList';
-  db.query(query, (err, results) => {
+  const _query = 'select id, name from travelList';
+  db.query(_query, (err, results) => {
     if(err) {
       console.error('데이터베이스 쿼리 실패');
       resstatus(500).send('Internal Server Error');
@@ -60,6 +63,27 @@ app.get('/travel/:id', (req, res) => {
     const travel = results[0];
     res.render('travelDetail', {travel})      
   });
+})
+
+app.post('/travel', (req, res) => {
+  const {name} = req.body;
+  const _query = 'INSERT INTO travellist (name) VALUES (?)';
+  db.query(_query, [name],(err, results) => {
+    if(err) {
+      console.error('데이터베이스 쿼리 실패');
+      resstatus(500).send('Internal Server Error');
+      return;
+    }
+    res.redirect('/travel');
+  });
+});
+app.get('/add-travel', (req, res) => {
+  res.render('addTravel');
+});
+
+// use : 모든 method에 대해, 경로가 없으면? : 모든 경로에 대해
+app.use((req, res) => {
+  res.status(404).send('404 Not found')
 })
 
 // 서버가 포트 3001에서 요청을 대기합니다.
